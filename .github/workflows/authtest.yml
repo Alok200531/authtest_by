@@ -38,5 +38,6 @@ jobs:
           enable-AzPSSession: true
       - name: 'runvalidation'
         id: loginvalidation
+        shell: pwsh
         run: |
-            ./query.ps1
+            .\query.ps1
