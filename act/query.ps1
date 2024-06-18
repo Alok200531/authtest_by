@@ -1,100 +1,100 @@
 
-# function Start-AzTokenRefreshJob {
-#     [CmdletBinding(SupportsShouldProcess = $true)]
-#     param (
+function Start-AzTokenRefreshJob {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param (
 
-#         [Parameter(Mandatory = $True)]
-#         [ValidateNotNullOrEmpty()]
-#         [System.Guid]$FileGuid
+        [Parameter(Mandatory = $True)]
+        [ValidateNotNullOrEmpty()]
+        [System.Guid]$FileGuid
 
-#     )
+    )
 
-#     begin {
+    begin {
 
-#         # inform that function has started
-#         Write-Information -MessageData "`n`"$($MyInvocation.MyCommand.Name)`" function has started..."
+        # inform that function has started
+        Write-Information -MessageData "`n`"$($MyInvocation.MyCommand.Name)`" function has started..."
 
-#     }
+    }
 
-#     process {
+    process {
 
-#         # create a file at runner volatile path
-#         Write-Information -MessageData "Creating temporary job control file with `"0`" boolean value..."
-#         $JobControlFileName = "AzTokenRefreshJob-" + $FileGuid
-#         try {
-#             0 | Out-File -FilePath "$ENV:TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
-#         }
-#         catch {
-#             Write-Information -MessageData "Failed to create temporary job control file with `"0`" boolean value.`n" -InformationAction Continue
-#             Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
-#         }
+        # create a file at runner volatile path
+        Write-Information -MessageData "Creating temporary job control file with `"0`" boolean value..."
+        $JobControlFileName = "AzTokenRefreshJob-" + $FileGuid
+        try {
+            0 | Out-File -FilePath "$ENV:TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Information -MessageData "Failed to create temporary job control file with `"0`" boolean value.`n" -InformationAction Continue
+            Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+        }
 
-#         # fetch az oidc token refresh sleep time
-# #        $AzTokenRefreshSleep = Get-ValueFromJson -ModuleID "CommonConfiguration" -TaskID "Data" -KeyName "AzTokenRefreshSleep"
-#         $AzTokenRefreshSleep = 240
-#         # job status file name
-#         $JobStatusFileName = "AzTokenRefreshStatus-" + $FileGuid
-#         #Create Job Status File. 
-#         try {
-#             0 | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
-#         }
-#         catch {
-#             Write-Information -MessageData "Failed to create temporary job status file with `"0`" boolean value.`n" -InformationAction Continue
-#             Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
-#         }
+        # fetch az oidc token refresh sleep time
+#        $AzTokenRefreshSleep = Get-ValueFromJson -ModuleID "CommonConfiguration" -TaskID "Data" -KeyName "AzTokenRefreshSleep"
+        $AzTokenRefreshSleep = 240
+        # job status file name
+        $JobStatusFileName = "AzTokenRefreshStatus-" + $FileGuid
+        #Create Job Status File. 
+        try {
+            0 | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Information -MessageData "Failed to create temporary job status file with `"0`" boolean value.`n" -InformationAction Continue
+            Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+        }
 
-#         # submit az oidc token refresh job in background
-#         Write-Information -MessageData "Starting az oidc token refresh job in the background..."
-#         try {
-#             $SubmitAzTokenRefreshJob = Start-Job -Name "AzTokenRefreshJob" -ScriptBlock {
+        # submit az oidc token refresh job in background
+        Write-Information -MessageData "Starting az oidc token refresh job in the background..."
+        try {
+            $SubmitAzTokenRefreshJob = Start-Job -Name "AzTokenRefreshJob" -ScriptBlock {
 
-#                 # passed arguments as parameters
-#                 param ($AzTokenRefreshSleep, $JobControlFileName, $JobStatusFileName)
+                # passed arguments as parameters
+                param ($AzTokenRefreshSleep, $JobControlFileName, $JobStatusFileName)
 
-#                 # initialize iteration count variable
-#                 $IterationCount = 1
+                # initialize iteration count variable
+                $IterationCount = 1
 
-#                 # az oidc token refresh logic loop
-#                 while ((Get-Content -Path "$ENV:TEMP\$JobControlFileName.txt") -eq 0) {
-#                     Write-Information -MessageData "Sleeping for $AzTokenRefreshSleep seconds before running iteration `"$IterationCount`"..."
-#                     Start-Sleep -Seconds $AzTokenRefreshSleep
-#                     Write-Information -MessageData "Updating job control file status and invoking api to refresh az oidc token..."
-#                     try {
-#                         "NotReady" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
-#                         $Null = Invoke-RestMethod -Uri "$($ENV:ACTIONS_ID_TOKEN_REQUEST_URL)&audience=api://AzureADTokenExchange" -Headers @{Authorization = "Bearer $($ENV:ACTIONS_ID_TOKEN_REQUEST_TOKEN)"}
-#                         Start-Sleep -Seconds 2
-#                         "Ready" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
-#                     }
-#                     catch {
-#                         Write-Information -MessageData "Failed to update job control file status and invoke api to refresh az oidc token.`n" -InformationAction Continue
-#                         Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
-#                     }
-#                     $IterationCount++
-#                 }
+                # az oidc token refresh logic loop
+                while ((Get-Content -Path "$ENV:TEMP\$JobControlFileName.txt") -eq 0) {
+                    Write-Information -MessageData "Sleeping for $AzTokenRefreshSleep seconds before running iteration `"$IterationCount`"..."
+                    Start-Sleep -Seconds $AzTokenRefreshSleep
+                    Write-Information -MessageData "Updating job control file status and invoking api to refresh az oidc token..."
+                    try {
+                        "NotReady" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+                        $Null = Invoke-RestMethod -Uri "$($ENV:ACTIONS_ID_TOKEN_REQUEST_URL)&audience=api://AzureADTokenExchange" -Headers @{Authorization = "Bearer $($ENV:ACTIONS_ID_TOKEN_REQUEST_TOKEN)"}
+                        Start-Sleep -Seconds 2
+                        "Ready" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+                    }
+                    catch {
+                        Write-Information -MessageData "Failed to update job control file status and invoke api to refresh az oidc token.`n" -InformationAction Continue
+                        Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+                    }
+                    $IterationCount++
+                }
 
-#                 # warn that job has been stopped
-#                 Write-Warning -Message "Received `"1`" boolean value in temporary job control file. Background job for az oidc token refresh has been stopped."
+                # warn that job has been stopped
+                Write-Warning -Message "Received `"1`" boolean value in temporary job control file. Background job for az oidc token refresh has been stopped."
 
-#             } -ArgumentList $AzTokenRefreshSleep, $JobControlFileName, $JobStatusFileName -ErrorAction Stop
-#             Write-Output "Printing PSJob status"
-#             $SubmitAzTokenRefreshJob
-#         }
-#         catch {
-#             Write-Information -MessageData "Failed to start az oidc token refresh job in the background.`n" -InformationAction Continue
-#             Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
-#         }
+            } -ArgumentList $AzTokenRefreshSleep, $JobControlFileName, $JobStatusFileName -ErrorAction Stop
+            Write-Output "Printing PSJob status"
+            $SubmitAzTokenRefreshJob
+        }
+        catch {
+            Write-Information -MessageData "Failed to start az oidc token refresh job in the background.`n" -InformationAction Continue
+            Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+        }
 
-#     }
+    }
 
-#     end {
+    end {
 
-#         # return submitted az oidc token refresh job
-#         Write-Information -MessageData "Returning submitted background job object..."
-#         return $SubmitAzTokenRefreshJob
+        # return submitted az oidc token refresh job
+        Write-Information -MessageData "Returning submitted background job object..."
+        return $SubmitAzTokenRefreshJob
 
-#     }
+    }
 
-# }
+}
 
 
 
