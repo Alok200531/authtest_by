@@ -197,6 +197,57 @@ function Wait-AzTokenRefreshStatus {
 
 }
 
+# Function to get Value from Data.Json using a Key - Start
+function Get-ValueFromJson {
+    [OutputType([System.Object[]])]
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $False)]
+        [string]$FilePath = "Data\Data.json",
+
+        [Parameter(Mandatory = $True)]
+        [string]$ModuleID,
+
+        [Parameter(Mandatory = $True)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TaskID,
+
+        [Parameter(Mandatory = $True)]
+        [ValidateNotNullOrEmpty()]
+        [string]$KeyName
+    )
+
+    begin {
+        Write-Information -MessageData "`n`"$($MyInvocation.MyCommand.Name)`" function has started..."
+        # print passed parameters
+        Write-Information -MessageData "Printing received parameters..."
+        Write-Information -MessageData $($($MyInvocation.BoundParameters | Out-String) -replace "`n$")
+    }
+
+    process {
+        ##Fetching out the values using key
+        Write-Information -MessageData "Fetching out the Key from Data.Json"
+        try {
+            $GetFileData = (Get-Content -path $FilePath -ErrorAction Stop | convertfrom-json)
+            $GetValue = $GetFileData.$ModuleID.$TaskID.$KeyName
+        }
+        catch {
+            Write-Information -MessageData "Encountered Error while getting Data from Json.`n" -InformationAction Continue
+            Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+        }
+    }
+
+    end {
+        if ($GetValue) {
+            Write-Information -MessageData "Value successfully fetched of $KeyName from DataJson"
+        }
+        else {
+            Write-Information -MessageData "Value not fetched for key: $KeyName from DataJson"
+        }
+        return $GetValue
+    }
+}
+# Function to get Value from Data.Json using a Key - End
 
 
 $AzOidcTokenFileGuid = (New-Guid).Guid

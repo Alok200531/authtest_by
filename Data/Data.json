@@ -1,0 +1,415 @@
+{
+  "CommonConfiguration": {
+    "Data": {
+      "ThrottleLimit": 10,
+      "ProcessingPath": "$ENV:TEMP",
+      "VerbosePreference": "SilentlyContinue",
+      "InformationPreference": "Continue",
+      "StateOverride": false,
+      "AzGraphSleep": 6,
+      "AzTokenRefreshSleep": 240
+    }
+  },
+  "SecretsConfiguration": {
+    "Email": {
+      "SecretName": "DRProdAutomation",
+      "KeyVaultName": "kv-by-dev-drauto-eus2-01",
+      "SubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b"
+    },
+    "ServiceNow": {
+      "SecretName": "drautomation-user",
+      "KeyVaultName": "kv-by-dev-drauto-eus2-01",
+      "SubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b"
+    },
+    "ServiceAccount": {
+      "SecretName": "jda-dev-poctms",
+      "KeyVaultName": "kv-by-dev-drauto-eus2-01",
+      "SubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b"
+    }
+  },
+  "PesterConfiguration": {
+    "Run": {
+      "Path": [
+        ".//Modules//ASR",
+        ".//Modules//Core",
+        ".//Modules//DatabaseValidations",
+        ".//Modules//DNSValidations",
+        ".//Modules//Email",
+        ".//Modules//EnvironmentValidations",
+        ".//Modules//EnvGenerate",
+        ".//Modules//EvidanceCollection",
+        ".//Modules//MFTValidations",
+        ".//Modules//Monitoring",
+        ".//Modules//Prerequisites",
+        ".//Modules//Reporting",
+        ".//Modules//RPOTests",
+        ".//Modules//ServiceNow",
+        ".//Modules//StateMgmt",
+        ".//Modules//TMSValidations",
+        ".//Modules//WindowsValidations"
+      ],
+      "PassThru": true,
+      "Throw": false
+    },
+    "CodeCoverage": {
+      "Enabled": true,
+      "OutputFormat": "JaCoCo",
+      "OutputPath": "CodeCoverage.xml"
+    },
+    "TestResult": {
+      "Enabled": true,
+      "OutputFormat": "NUnitXml",
+      "OutputPath": "TestResults.xml"
+    },
+    "Should": {
+      "ErrorAction": "Stop"
+    },
+    "Output": {
+      "Verbosity": "Detailed"
+    }
+  },
+  "SiteDetails": {
+    "Site1": {
+      "StorageAccountSubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "StorageAccountResourceGroupName": "rg-ad02-02-dv5-eus2",
+      "StorageAccountName": "drautomation05",
+      "StorageEvidenceTableName": "drevidence",
+      "StorageStateMgmtTableName": "drstate",
+      "StorageSchedulerAccountName": "drautomation04",
+      "StorageSchedulerTableName": "SchedulerTable",
+      "StorageSchedulerContainerName": "schedulerjson",
+      "StorageArtifactContainerName": "drartifact",
+      "FunctionAppName": "fnapp-by-dev-drauto-cus-01",
+      "FunctionAppRGName": "rg-ad02-02-dv5-eus2",
+      "FAppSubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "LASubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "LAResourceGroupName": "rg-ad02-02-dv5-eus2",
+      "LAStorageAccountName": "drautomation02",
+      "LA1FileShareName": "logic-by-dev-drauto-cus-019e85",
+      "LA2FileShareName": "logic-by-dev-drauto-cus-028c79",
+      "LogicApp1Name" : "logic-by-dev-drauto-cus-01",
+      "LogicApp1WorkflowName" : "DataProcessingWorkflow",
+      "LogicApp2Name" : "logic-by-dev-drauto-cus-02",
+      "LogicApp2WorkflowName" : "SchedulerWorkflow"
+    },
+    "Site2": {
+      "StorageAccountSubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "StorageAccountResourceGroupName": "rg-ad02-02-dv5-eus2",
+      "StorageAccountName": "drautomation07",
+      "StorageEvidenceTableName": "drevidence",
+      "StorageStateMgmtTableName": "drstate",
+      "StorageSchedulerAccountName": "drautomation06",
+      "StorageSchedulerTableName": "SchedulerTable",
+      "StorageSchedulerContainerName": "schedulerjson",
+      "StorageArtifactContainerName": "drartifact",
+      "FunctionAppName": "fnapp-by-dev-drauto-eus2-01",
+      "FunctionAppRGName": "rg-ad02-02-dv5-eus2",
+      "FAppSubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "LASubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "LAResourceGroupName": "rg-ad02-02-dv5-eus2",
+      "LAStorageAccountName": "drautomation03",
+      "LA1FileShareName": "logic-by-dev-drauto-eus2-03af6c",
+      "LA2FileShareName": "logic-by-dev-drauto-eus2-0481d8",
+      "LogicApp1Name" : "logic-by-dev-drauto-eus2-03",
+      "LogicApp1WorkflowName" : "DataProcessingWorkflow",
+      "LogicApp2Name" : "logic-by-dev-drauto-eus2-04",
+      "LogicApp2WorkflowName" : "Scheduler"
+    }
+  },
+  "ASR": {
+    "All": {
+      "RpoInSeconds": 300,
+      "SubnetServiceEnpoints": "Microsoft.Sql,Microsoft.Storage",
+      "AsrJobSleepTimeShort": 120,
+      "AsrJobSleepTimeLong": 300
+    },
+    "APIVersions": {
+      "replicationProtectedItems": "?api-version=2023-02-01"
+    }
+  },
+  "WindowsValidations": {
+    "All-Failover-Task5": {
+      "CPUThreshold": 90,
+      "MemoryThreshold": 90,
+      "WindowsUsername": "jda_dev_poctms"
+    }
+  },
+  "ServiceNow": {
+    "All-All-Task1": {
+      "SNOWURL": "https://blueyonderdev.service-now.com/api/now/table/sc_task",
+      "SNOWUploadURL": "https://blueyonderdev.service-now.com/api/now/attachment/file?table_name=sc_task&table_sys_id={0}&file_name={1}",
+      "SNOWUsername": "drautomation_user",
+      "SNOWSecretName": "drautomation-user",
+      "ScheduledTaskDescription": "Trigger DR Automation Task",
+      "RealDRTaskDescription": "Real Dr Request",
+      "TicketStatus": {
+        "Assigned": "1",
+        "Work In Progress": "2",
+        "Closed Successful": "3",
+        "Closed Unsuccessful": "4",
+        "Closed Cancelled": "20"
+      }
+    }
+  },
+  "Core": {
+    "All": {
+      "DBServerCodes": [
+        3,
+        12,
+        16,
+        23,
+        27
+      ]
+    }
+  },
+  "Monitoring": {
+    "All-PV-Failover-Task1": {
+      "ZabbixUsername": "jda_dev_poctms",
+      "MaintenancePeriodInSec": "43200",
+      "ZabbixURLPrUS": "https://veus2core0806.jdadelivers.com/zabbix/api_jsonrpc.php",
+      "ZabbixURLNPUS": "https://veus2core0801.jdadelivers.com/zabbix/api_jsonrpc.php",
+      "ZabbixURLPrEurope": "https://veuwcore0800.jdadelivers.com/zabbix/api_jsonrpc.php",
+      "ZabbixURLNPEurope": "https://veuwcore0820.jdadelivers.com/zabbix/api_jsonrpc.php",
+      "ZabbixURLAsia": "https://vasecore0800.jdadelivers.com/zabbix/api_jsonrpc.php ",
+      "ZabbixURLAustralia": "https://vauecore0800.jdadelivers.com/zabbix/api_jsonrpc.php "
+    }
+  },
+  "DatabaseValidations": {
+    "All-PV-Failover-Task5": {
+      "TimeZoneQuery": "DECLARE @TimeZone VARCHAR(50)\nEXEC MASTER.dbo.xp_regread 'HKEY_LOCAL_MACHINE','SYSTEM\\CurrentControlSet\\Control\\TimeZoneInformation','TimeZoneKeyName',@TimeZone OUT\nSELECT @TimeZone as TimeZone",
+      "ServiceStatusQuery": "SELECT SERVICENAME, STARTUP_TYPE_DESC, STATUS_DESC, LAST_STARTUP_TIME,SERVICE_ACCOUNT,IS_CLUSTERED ,CLUSTER_NODENAME FROM SYS.DM_SERVER_SERVICES",
+      "HealthStatusQuery": "SELECT ag.name AS ag_name ,ar.replica_server_name AS ag_replica_server ,dr_state.database_id AS database_id ,is_ag_replica_local = CASE WHEN ar_state.is_local = 1 THEN N'LOCAL' ELSE 'REMOTE' END ,ag_replica_role = CASE WHEN ar_state.role_desc IS NULL THEN N'DISCONNECTED' ELSE ar_state.role_desc END ,dr_state.synchronization_health_desc ,dr_state.last_hardened_lsn ,dr_state.last_hardened_time ,datediff(s, last_hardened_time, getdate()) AS 'seconds behind primary' FROM ( ( sys.availability_groups AS ag INNER JOIN sys.availability_replicas AS ar ON ag.group_id = ar.group_id ) INNER JOIN sys.dm_hadr_availability_replica_states AS ar_state ON ar.replica_id = ar_state.replica_id ) INNER JOIN sys.dm_hadr_database_replica_states dr_state ON ag.group_id = dr_state.group_id AND dr_state.replica_id = ar_state.replica_id",
+      "ServiceAccountName": "jda_dev_poctms"
+    }
+  },
+  "RPOTests": {
+    "All-Failover-Task1": {
+      "KeyVaultName": "kv-by-dev-drauto-eus2-01",
+      "SubscriptionId": "2e8e3533-797a-4a88-b697-a02efee8dc9b",
+      "TMSUserName": "VENTURE",
+      "WEBURL": "https://tmsdev-aztms-ws-dv5.jdadelivers.com/webservices/services/TransportationManager2",
+      "DRTESTUSERFO": "DR_TESTUSERFO",
+      "DRTESTUSERFB": "DR_TESTUSERFB",
+      "AppServerXMLFolderPath": "F:\\Programs\\TMSPatchingActivities\\",
+      "AppServerPatchingPath": "F:\\Programs\\TMSPatchingActivities\\TMSPatching.exe",
+      "MatchServiceList": [
+        "*wss*",
+        "*xagt*"
+      ],
+      "Environment": "Dev",
+      "TMSUIMonitorServerEUS2": "veus2core1250.jdadelivers.com",
+      "TMSUIMonitorServerEUW": "veuwcore1250.jdadelivers.com",
+      "TMSUIMonitorServerAUE": "vauecore1250.jdadelivers.com",
+      "TMSUIMonitorServerASE": "vasecore1250.jdadelivers.com",
+      "TMSMonitorCommand": "cmd.exe /c echo 1 > F:/Programs/MoM_UIMon_SelfHeal/UIMon_SelfHeal_Input/",
+      "TMSMonitorSleepTime": "300",
+      "TMSSecretName": "VENTURE",
+      "TMSVMUserName": "jda_dev_poctms",
+      "TMSVMSecretName": "jda-dev-poctms"
+    }
+  },
+  "MFTValidations": {
+    "All-PV-Failover-Task1": {
+      "SFTPUsername": "bluegcseusnpv2",
+      "SFTPPortNumber": 22,
+      "SFTPSecretName": "bluegcseusnpv2",
+      "SFTPHostNameEUS2": "PRODB2BGWNA3.jdadelivers.com",
+      "SFTPHostNameEUSProd": "PRODB2BGWNA1.jdadelivers.com",
+      "SFTPHostNameEUSNP": "PREPB2BGWNA1.jdadelivers.com",
+      "SFTPHostNameEUWProd": "PRODB2BGWEU1.jdadelivers.com",
+      "SFTPHostNameEUWNP": "PREPB2BGWEU1.jdadelivers.com",
+      "SFTPHostNameASEProd": "PRODB2BGWAS1.jdadelivers.com",
+      "SFTPHostNameASENP": "PREPB2BGWAS1.jdadelivers.com",
+      "SFTPHostNameAUE": "PRODB2BGWAU1.jdadelivers.com",
+      "SFTPHostNamePnGProd": "prodb2bgwpgus.jdadelivers.com",
+      "SFTPHostNamePnGNP": "prepb2bgwpgqa.jdadelivers.com"
+    }
+  },
+  "TMSValidations": {
+    "TMS-Failover-Task4": {
+      "VMUserAssignedIdentityId": "ID1,ID2"
+    }
+  },
+  "Prerequisites": {
+    "All-PostValidation-Failback-Task1": {
+      "ComputeSkuURL": "https://management.azure.com/subscriptions/{0}/providers/Microsoft.Compute/skus?api-version=2021-07-01&$filter=location eq '{1}'"
+    },
+    "All-PV-Failback-Task6": {
+      "DataSyncToPrimary": 3,
+      "PreFailbackValidation": 1
+    }
+  },
+  "Reporting": {
+    "All-Reporting-Task4": {
+      "ReportTemplate": "DRFormat - Final.docx"
+    },
+    "SharepointCreds": {
+      "SharePointUsername": "Gundapaneni.Tejaswini@jda.com",
+      "SiteURL": "https://jda365.sharepoint.com/sites/a_GRC2",
+      "DestinationFolderPath": "Repository For Automation/Automation Reports"
+    },
+    "EmailTemplates": {
+      "Phasewise": {
+        "body": "Hello Team,\n\nDR phase: {0} has been completed, you can proceed with the execution of next phase in the DR activity.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - DR Phase Status"
+      },
+      "FinalReport": {
+        "body": "Hello Team,\n\nDR activity has been successfully completed. Final reports are generated and uploaded at this SharePoint location: {0}, Filename: {1}.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Final Report"
+      },
+      "LongRunningActivity": {
+        "body": "Hello Team,\n\nData Sync has been completed.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Primary-to-DR DataSync / DR-to-Primary DataSync"
+      },
+      "Failure": {
+        "body": "Hello Team,\n\nAttention required, DR activity is failed at this phase: {0} and task : {1} with error message: {2}.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Failure at this phase: {1}"
+      },
+      "Cancellation": {
+        "body": "Hello Team,\n\nDR activity has been cancelled, kindly check the updated DR schedule.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - DR Activity Cancelled"
+      },
+      "ReSchedule": {
+        "body": "Hello Team,\n\nDR activity has been rescheduled, kindly check the updated DR schedule.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - DR Activity Rescheduled"
+      },
+      "Prerequisite": {
+        "body": "Hello Team,\n\nKindly find the open ticket details of the Prerequisite phase below:\n{0}\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Prerequisite Open ticket details"
+      },
+      "GitHubWorkflowFailure": {
+        "body": "Hello Team,\n\nFailed to trigger the GitHub Workflow at this phase: {0} and task : {1} with error message: {2}.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Failed to trigger the GitHub Workflow at this phase: {1}"
+      },
+      "LogicAppFailure": {
+        "body": "Hello Team,\n\nLogic App named {0} failed with this error message: {1}.\n\nRegards,\nDR Automation Team.",
+        "Subject": "{0} - Logic App Failure"
+      },
+      "FromEmailAddress": "Gundapaneni.Tejaswini@jda.com",
+      "ToEmailAddress": [
+        "Gundapaneni.Tejaswini@jda.com",
+        "neha.goswami@jda.com",
+        "vivek.jindal@jda.com",
+        "alok.maheshwari@jda.com",
+        "navjot.singh@jda.com",
+        "amit.verma@jda.com",
+        "kevin.burton@jda.com"
+      ]
+    },
+    "SMTPServerDetails": {
+      "SMTPUsername": "hcl-by-poc-202202/DRProdAutomation",
+      "SMTPSecretName": "DRProdAutomation",
+      "APIURL": "https://api.outbound.us.mailhop.org/v1/send"
+    }
+  },
+  "EvidanceCollection": {
+    "Add-StorageTableEntity": {
+      "MaximumTries": "10",
+      "SecondsDelay": "10"
+    }
+  },
+  "DNSValidations": {
+    "All-PV-Failover-Task1": {
+      "DNSTerminalServer": "DLJDATS01V",
+      "DNSInternalInstance": "SCDC01",
+      "DNSUsername": "jda_dev_poctms",
+      "DNSDomainName": "jdadelivers.com",
+      "DNSDCServersEUS2": [
+        "veus2core0001",
+        "veus2core0002",
+        "veus2core0005"
+      ],
+      "DNSDCServersCUS": [
+        "vcuscore0001",
+        "vcuscore0002",
+        "vcuscore0005"
+      ],
+      "DNSDCServersEUN": [
+        "veuncore0001",
+        "veuncore0002",
+        "veuncore0005"
+      ],
+      "DNSDCServersAUSE": [
+        "vausecore0001",
+        "vausecore0002",
+        "vausecore0005"
+      ],
+      "DNSDCServersEA": [
+        "vaecore0001",
+        "vaecore0002",
+        "vaecore0005"
+      ],
+      "DNSDCServersEUW": [
+        "veuwcore0001",
+        "veuwcore0002",
+        "veuwcore0005"
+      ],
+      "DNSDCServersAUE": [
+        "vauecore0001",
+        "vauecore0002",
+        "vauecore0005"
+      ],
+      "DNSDCServersASE": [
+        "vasecore0001",
+        "vasecore0002",
+        "vasecore0005"
+      ],
+      "DNSDCServersINC": [
+        "vinccore0001",
+        "vincore0005"
+      ]
+    }
+  },
+  "LinuxValidations": {
+    "All-Failover-Task5": {
+      "LinuxUsername": "build",
+      "PortNumber": "22",
+      "TimezoneCommand": "timedatectl | grep 'Time zone'",
+      "NTPSyncCommand": "timedatectl | grep 'synchronized'",
+      "ServiceStatusCommand": "systemctl status {0}.service | grep 'Active:'",
+      "AuthCommand": "sudo -S cat /etc/ssh/sshd_config | grep 'PasswordAuthentication'",
+      "DomainCommand": "sudo -S cat /etc/resolv.conf | grep jdadelivers.com",
+      "MountPointCommand": "df -Th",
+      "ASMDiskCommand": "lsblk -f | grep  -i asm | wc -l",
+      "NFSCommand": "sudo -S cat /etc/fstab | grep nofail"
+    }
+  },
+  "RealDRSubscriptionMapping": {
+    "sub-by-dev-tms-01": {
+      "TargetSubscription": "sub-by-dev-tms-01"
+    },
+    "sub-by-cld-byc-prod-01": {
+      "TargetSubscription": "sub-by-cld-byc-prod-01"
+    },
+    "sub-by-cld-indsol-prod-01": {
+      "TargetSubscription": "sub-by-cld-indsol-prod-01"
+    },
+    "sub-jda-cld-solutions-01": {
+      "TargetSubscription": "sub-jda-cld-dr-solutions-01"
+    },
+    "sub-by-cld-solutions-eus2-02": {
+      "TargetSubscription": "sub-by-cld-solutions-cus-02"
+    },
+    "sub-by-cld-solutions-eus2-03": {
+      "TargetSubscription": "sub-by-cld-solutions-cus-03"
+    },
+    "sub-by-cld-solutions-ase-02": {
+      "TargetSubscription": "sub-by-cld-solutions-ae-02"
+    },
+    "sub-by-cld-solutions-euw-02": {
+      "TargetSubscription": "sub-by-cld-solutions-eun-02"
+    },
+    "sub-by-cld-solutions-aue-02": {
+      "TargetSubscription": "sub-by-cld-solutions-ause-02"
+    },
+    "sub-by-cld-solutions-ase-03": {
+      "TargetSubscription": "sub-by-cld-solutions-ae-03"
+    },
+    "sub-by-cld-solutions-euw-03": {
+      "TargetSubscription": "sub-by-cld-solutions-eun-03"
+    },
+    "sub-by-cld-solutions-aue-03": {
+      "TargetSubscription": "sub-by-cld-solutions-ause-03"
+    }
+  }
+}
