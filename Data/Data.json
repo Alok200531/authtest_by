@@ -10,6 +10,7 @@
       "AzTokenRefreshSleep": 240
     }
   },
+  
   "SecretsConfiguration": {
     "Email": {
       "SecretName": "DRProdAutomation",

@@ -34,6 +34,14 @@ function Start-AzTokenRefreshJob {
 
         # job status file name
         $JobStatusFileName = "AzTokenRefreshStatus-" + $FileGuid
+        #Create Job Status File. 
+        try {
+            0 | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Information -MessageData "Failed to create temporary job status file with `"0`" boolean value.`n" -InformationAction Continue
+            Write-Information -MessageData $($_.Exception | Out-String) -InformationAction Continue; Write-Information -MessageData $($_.InvocationInfo | Out-String) -InformationAction Continue; throw
+        }
 
         # submit az oidc token refresh job in background
         Write-Information -MessageData "Starting az oidc token refresh job in the background..."
