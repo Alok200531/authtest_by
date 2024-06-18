@@ -22,7 +22,7 @@ function Start-AzTokenRefreshJob {
         Write-Information -MessageData "Creating temporary job control file with `"0`" boolean value..."
         $JobControlFileName = "AzTokenRefreshJob-" + $FileGuid
         try {
-            0 | Out-File -FilePath "$ENV:RUNNER_TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+            0 | Out-File -FilePath "$ENV:TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
         }
         catch {
             Write-Information -MessageData "Failed to create temporary job control file with `"0`" boolean value.`n" -InformationAction Continue
@@ -47,15 +47,15 @@ function Start-AzTokenRefreshJob {
                 $IterationCount = 1
 
                 # az oidc token refresh logic loop
-                while ((Get-Content -Path "$ENV:RUNNER_TEMP\$JobControlFileName.txt") -eq 0) {
+                while ((Get-Content -Path "$ENV:TEMP\$JobControlFileName.txt") -eq 0) {
                     Write-Information -MessageData "Sleeping for $AzTokenRefreshSleep seconds before running iteration `"$IterationCount`"..."
                     Start-Sleep -Seconds $AzTokenRefreshSleep
                     Write-Information -MessageData "Updating job control file status and invoking api to refresh az oidc token..."
                     try {
-                        "NotReady" | Out-File -FilePath "$ENV:RUNNER_TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+                        "NotReady" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
                         $Null = Invoke-RestMethod -Uri "$($ENV:ACTIONS_ID_TOKEN_REQUEST_URL)&audience=api://AzureADTokenExchange" -Headers @{Authorization = "Bearer $($ENV:ACTIONS_ID_TOKEN_REQUEST_TOKEN)"}
                         Start-Sleep -Seconds 2
-                        "Ready" | Out-File -FilePath "$ENV:RUNNER_TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+                        "Ready" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
                     }
                     catch {
                         Write-Information -MessageData "Failed to update job control file status and invoke api to refresh az oidc token.`n" -InformationAction Continue
@@ -110,7 +110,7 @@ function Stop-AzTokenRefreshJob {
         Write-Information -MessageData "Updating temporary job control file with `"1`" boolean value..."
         $JobControlFileName = "AzTokenRefreshJob-" + $FileGuid
         try {
-            1 | Out-File -FilePath "$ENV:RUNNER_TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
+            1 | Out-File -FilePath "$ENV:TEMP\$JobControlFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
         }
         catch {
             Write-Information -MessageData "Failed to update temporary job control file with `"1`" boolean value.`n" -InformationAction Continue
@@ -175,7 +175,7 @@ function Wait-AzTokenRefreshStatus {
         # wait until az oidc token refresh api request is completed
         Write-Information "Waiting for az oidc token refresh api request to complete..."
         try {
-            $JobStatus = (Get-Content -Path "$ENV:RUNNER_TEMP\$JobStatusFileName.txt")
+            $JobStatus = (Get-Content -Path "$ENV:TEMP\$JobStatusFileName.txt")
         }
         catch {
             Write-Information -MessageData "Az oidc token refresh status file doesn't exist.`n" -InformationAction Continue
@@ -183,7 +183,7 @@ function Wait-AzTokenRefreshStatus {
         }
         while ($JobStatus -ne "Ready") {
             Start-Sleep -Seconds 2
-            $JobStatus = (Get-Content -Path "$ENV:RUNNER_TEMP\$JobStatusFileName.txt")
+            $JobStatus = (Get-Content -Path "$ENV:TEMP\$JobStatusFileName.txt")
         }
 
     }
