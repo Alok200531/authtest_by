@@ -199,6 +199,8 @@ function Wait-AzTokenRefreshStatus {
 
 
 
+$AzOidcTokenFileGuid = (New-Guid).Guid
+$Null = Start-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
 
 $currentTime = Get-Date
@@ -209,11 +211,13 @@ Set-AzContext -Subscription "679f3d56-bed2-429f-9e31-4d7bf67e14c7"
 
 try {
     while ($currentTime -ne $Runtime) {
+
         Get-AzResourceGroup -Name "Alok_Maheshwari_RG" -ErrorAction Stop | Out-Null   
         $currentTime = $currentTime.AddMinutes(4)
-        sleep 50    
+        sleep 120    
         $attempt++
     Write-Output "Attempt Number: $attempt"
+    $Null = Wait-AzTokenRefreshStatus -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
     }
 }
@@ -226,6 +230,7 @@ catch {
     break
 }
 
+$Null = Stop-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
 
 
