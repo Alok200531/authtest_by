@@ -76,6 +76,8 @@ function Start-AzTokenRefreshJob {
                 Write-Warning -Message "Received `"1`" boolean value in temporary job control file. Background job for az oidc token refresh has been stopped."
 
             } -ArgumentList $AzTokenRefreshSleep, $JobControlFileName, $JobStatusFileName -ErrorAction Stop
+            Write-Output "Printing PSJob status"
+            $SubmitAzTokenRefreshJob
         }
         catch {
             Write-Information -MessageData "Failed to start az oidc token refresh job in the background.`n" -InformationAction Continue
@@ -93,6 +95,8 @@ function Start-AzTokenRefreshJob {
     }
 
 }
+
+
 
 
 function Stop-AzTokenRefreshJob {
@@ -272,10 +276,11 @@ try {
     while ($currentTime -ne $Runtime) {
 
         Get-AzResourceGroup -Name "Alok_Maheshwari_RG" -ErrorAction Stop | Out-Null   
+        Write-Output "Attempt Number: $attempt"
         $currentTime = $currentTime.AddMinutes(4)
         sleep 120    
         $attempt++
-    Write-Output "Attempt Number: $attempt"
+
     $Null = Wait-AzTokenRefreshStatus -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
     }
