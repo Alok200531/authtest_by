@@ -40,6 +40,19 @@ jobs:
         id: loginvalidation
         shell: pwsh
         run: |
-           ./act/query.ps1
+            try {   ./act/query.ps1 -erroraction stop}
+            catch{
+            $er = $_
+              if ($er -like "*Your Azure credentials have not been set up or have expired*")
+                {
+                  Write-output "Caught the damm error"
+                  }
+                  Else
+                  {
+                    write-output "This is some other issue"
+                    $er
+                  }
+
+            }
 
 
