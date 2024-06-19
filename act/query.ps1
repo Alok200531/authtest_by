@@ -1,4 +1,4 @@
-$InformationPreference = Continue 
+#$InformationPreference = Continue 
 
 function Start-AzTokenRefreshJob {
     [CmdletBinding(SupportsShouldProcess = $true)]
