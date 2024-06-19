@@ -295,10 +295,11 @@ catch {
     $_.Exception
     
     "
+    
+    Stop-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
+
     break
 }
-
-Stop-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
 
 
