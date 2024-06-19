@@ -1,3 +1,4 @@
+$InformationPreference = Continue 
 
 function Start-AzTokenRefreshJob {
     [CmdletBinding(SupportsShouldProcess = $true)]
@@ -61,8 +62,11 @@ function Start-AzTokenRefreshJob {
                     Write-Information -MessageData "Updating job control file status and invoking api to refresh az oidc token..."
                     try {
                         "NotReady" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
-                        $Null = Invoke-RestMethod -Uri "$($ENV:ACTIONS_ID_TOKEN_REQUEST_URL)&audience=api://AzureADTokenExchange" -Headers @{Authorization = "Bearer $($ENV:ACTIONS_ID_TOKEN_REQUEST_TOKEN)"}
+                        $method = Invoke-RestMethod -Uri "$($ENV:ACTIONS_ID_TOKEN_REQUEST_URL)&audience=api://AzureADTokenExchange" -Headers @{Authorization = "Bearer $($ENV:ACTIONS_ID_TOKEN_REQUEST_TOKEN)"}
+                        Write-Output "Printing incoming resopnse after triggering Token Refresh API"
+                        $method
                         Start-Sleep -Seconds 2
+
                         "Ready" | Out-File -FilePath "$ENV:TEMP\$JobStatusFileName.txt" -NoNewline -Encoding utf8 -Force -ErrorAction Stop
                     }
                     catch {
@@ -71,7 +75,7 @@ function Start-AzTokenRefreshJob {
                     }
                     $IterationCount++
                 }
-
+                
                 # warn that job has been stopped
                 Write-Warning -Message "Received `"1`" boolean value in temporary job control file. Background job for az oidc token refresh has been stopped."
                 Write-Output "receiving Token Refresh Job Data"
@@ -142,6 +146,7 @@ function Stop-AzTokenRefreshJob {
         Write-Information -MessageData "Getting completed az oidc token refresh job..."
         try {
             $GetAzTokenRefreshJob = Get-Job -Name "AzTokenRefreshJob" -ErrorAction Stop
+            Receive-Job -Job $GetAzTokenRefreshJob
         }
         catch {
             Write-Information -MessageData "Failed to get completed az oidc token refresh job.`n" -InformationAction Continue
