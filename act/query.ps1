@@ -1,4 +1,4 @@
-#$InformationPreference = Continue 
+ 
 
 function Start-AzTokenRefreshJob {
     [CmdletBinding(SupportsShouldProcess = $true)]
@@ -265,6 +265,7 @@ function Get-ValueFromJson {
 }
 # Function to get Value from Data.Json using a Key - End
 
+$InformationPreference = Continue
 
 $AzOidcTokenFileGuid = (New-Guid).Guid
 Start-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
