@@ -267,8 +267,8 @@ function Get-ValueFromJson {
 
 $InformationPreference = Continue
 
-$AzOidcTokenFileGuid = (New-Guid).Guid
-Start-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
+# $AzOidcTokenFileGuid = (New-Guid).Guid
+# Start-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
 
 $currentTime = Get-Date
@@ -286,7 +286,7 @@ try {
         sleep 120    
         $attempt++
 
-    Wait-AzTokenRefreshStatus -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
+    # Wait-AzTokenRefreshStatus -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
     }
 }
@@ -297,7 +297,7 @@ catch {
     
     "
     
-    Stop-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
+    # Stop-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
 
     break
 }
