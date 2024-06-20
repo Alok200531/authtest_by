@@ -265,7 +265,7 @@ function Get-ValueFromJson {
 }
 # Function to get Value from Data.Json using a Key - End
 
-$InformationPreference = Continue
+#$InformationPreference = Continue
 
 # $AzOidcTokenFileGuid = (New-Guid).Guid
 # Start-AzTokenRefreshJob -FileGuid $AzOidcTokenFileGuid -ErrorAction Stop
