@@ -33,7 +33,6 @@ jobs:
         uses: azure/login@v2
         with:
           auth-type: IDENTITY
-          client-id: "112677d1-0a8e-4d23-805e-29890fd5b14c"
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: "679f3d56-bed2-429f-9e31-4d7bf67e14c7"
           enable-AzPSSession: true
