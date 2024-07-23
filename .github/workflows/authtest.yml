@@ -28,34 +28,53 @@ jobs:
       - uses: actions/checkout@v4
 
 
+      # - name: 'Azure login'
+      #   id: azure_login
+      #   uses: azure/login@v2
+      #   with:
+      #     auth-type: IDENTITY
+      #     client-id: "112677d1-0a8e-4d23-805e-29890fd5b14c"
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #     subscription-id: "679f3d56-bed2-429f-9e31-4d7bf67e14c7"
+      #     enable-AzPSSession: true
       - name: 'Azure login'
         id: azure_login
         uses: azure/login@v2
         with:
-          auth-type: IDENTITY
-          client-id: "112677d1-0a8e-4d23-805e-29890fd5b14c"
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: "679f3d56-bed2-429f-9e31-4d7bf67e14c7"
-          enable-AzPSSession: true
+            client-id: ${{ secrets.ARM_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            allow-no-subscriptions: true
+            enable-AzPSSession: true
 
+      - name: Fetch OID token every 4 mins
+        shell: bash
+        run: |
+            while true; do
+              token_request=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
+              token_uri=$ACTIONS_ID_TOKEN_REQUEST_URL
+              token=$(curl -H "Authorization: bearer $token_request" "${token_uri}&audience=api://AzureADTokenExchange" | jq .value -r)
+              az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -t ${{ secrets.AZURE_TENANT_ID }} --federated-token $token --output none
+              # Sleep for 4 minutes
+              sleep 240
+            done &
 
       - name: 'runvalidation'
         id: loginvalidation
         shell: pwsh
         run: |
-            try {   ./act/query.ps1 -erroraction stop}
-            catch{
-            $er = $_
-              if ($er -like "*Your Azure credentials have not been set up or have expired*")
-                {
-                  Write-output "Caught the damm error"
-                  }
-                  Else
+              try {   ./act/query.ps1 -erroraction stop}
+              catch{
+              $er = $_
+                if ($er -like "*Your Azure credentials have not been set up or have expired*")
                   {
-                    write-output "This is some other issue"
-                    $er
-                  }
+                    Write-output "Caught the damm error"
+                    }
+                    Else
+                    {
+                      write-output "This is some other issue"
+                      $er
+                    }
 
-            }
+              }
 
 
